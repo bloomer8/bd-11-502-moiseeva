@@ -19,7 +19,7 @@ Delete anomaly: если удалить последний трек, можно 
 Сделала отдельную таблицу playlist_track, которая связывает плейлисты и треки, а track_id из playlist убрала:
 
 CREATE TABLE playlist_track (
-    playlist_id INT REFERENCES playlist(id) ON DELETE CASCADE,
+    playlist_id INT REFERENCES playlist(id),
     track_id INT REFERENCES track(id),
     PRIMARY KEY (playlist_id, track_id)
 );
@@ -39,7 +39,7 @@ ALTER TABLE track DROP COLUMN artist_id;
 
 3НФ: не должно быть транзитивных зависимостей. Например, artist_id → artist_name как раз такая, поэтому данные об артистах лежат в отдельной таблице artist, а в остальных только ссылка на неё.
 
-BCNF: все определяющие столбцы являются ключами (id, а в users ещё email), значит условие выполняется.
+BCNF: все определяющие столбцы являются ключами, значит условие выполняется.
 
 ## Итого
 
