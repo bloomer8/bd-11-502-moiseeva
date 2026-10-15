@@ -1,0 +1,110 @@
+# HW5. Агрегатные функции и группировка
+
+## 1. COUNT(), SUM(), AVG(), MIN(), MAX(), STRING_AGG()
+
+**Запрос 1.** Количество треков, самый короткий и самый длинный.
+
+```sql
+SELECT COUNT(*), MIN(duration), MAX(duration)
+FROM track;
+```
+
+**Запрос 2.** Общая и средняя длительность, названия всех треков.
+
+```sql
+SELECT SUM(duration), AVG(duration), STRING_AGG(title, ', ')
+FROM track;
+```
+
+## 2. GROUP BY, HAVING
+
+**Запрос 1.** Количество треков в каждом жанре.
+
+```sql
+SELECT genre, COUNT(*)
+FROM track
+GROUP BY genre;
+```
+
+**Запрос 2.** Альбомы, у которых средняя длительность трека больше 202.
+
+```sql
+SELECT album_id, AVG(duration)
+FROM track
+GROUP BY album_id
+HAVING AVG(duration) > 202;
+```
+
+## 3. GROUPING SETS, ROLLUP и CUBE
+
+**GROUPING SETS. Запрос 1.** Количество треков по жанрам и по альбомам.
+
+```sql
+SELECT genre, album_id, COUNT(*)
+FROM track
+GROUP BY GROUPING SETS ((genre), (album_id));
+```
+
+**GROUPING SETS. Запрос 2.** Количество записей в плейлистах по плейлистам и по трекам.
+
+```sql
+SELECT playlist_id, track_id, COUNT(*)
+FROM playlist_track
+GROUP BY GROUPING SETS ((playlist_id), (track_id));
+```
+
+**ROLLUP. Запрос 1.** Суммарная длительность по жанрам и альбомам с итогами.
+
+```sql
+SELECT genre, album_id, SUM(duration)
+FROM track
+GROUP BY ROLLUP (genre, album_id);
+```
+
+**ROLLUP. Запрос 2.** Количество записей в плейлистах с итогами.
+
+```sql
+SELECT playlist_id, track_id, COUNT(*)
+FROM playlist_track
+GROUP BY ROLLUP (playlist_id, track_id);
+```
+
+**CUBE. Запрос 1.** Количество треков по всем комбинациям жанра и альбома.
+
+```sql
+SELECT genre, album_id, COUNT(*)
+FROM track
+GROUP BY CUBE (genre, album_id);
+```
+
+**CUBE. Запрос 2.** Средняя длительность по всем комбинациям жанра и альбома.
+
+```sql
+SELECT genre, album_id, AVG(duration)
+FROM track
+GROUP BY CUBE (genre, album_id);
+```
+
+## 4. SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY
+
+**Запрос 1.** Количество треков длиннее 200 секунд по жанрам.
+
+```sql
+SELECT genre, COUNT(*)
+FROM track
+WHERE duration > 200
+GROUP BY genre
+HAVING COUNT(*) >= 1
+ORDER BY genre;
+```
+
+**Запрос 2.** Количество записей по плейлистам, начиная с трека номер 2.
+
+```sql
+SELECT playlist_id, COUNT(*)
+FROM playlist_track
+WHERE track_id > 1
+GROUP BY playlist_id
+HAVING COUNT(*) >= 1
+ORDER BY playlist_id;
+```
