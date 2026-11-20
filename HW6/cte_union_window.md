@@ -1,5 +1,5 @@
 HW6. CTE, UNION и оконные функции (MusicHub)
-Запросы написаны для PostgreSQL и рассчитаны на итоговую структуру БД после нормализации:
+
 - artist(id, name)
 - album(id, title, year, description, artist_id)
 - track(id, title, duration, album_id, genre)
